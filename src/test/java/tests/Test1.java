@@ -1,3 +1,5 @@
+package tests;
+
 import domain.Student;
 import org.junit.Before;
 import org.junit.BeforeClass;
