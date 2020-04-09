@@ -35,9 +35,7 @@ public class Test1 {
         NotaXMLRepo notaXMLRepository = new NotaXMLRepo(filenameNota);
         service = new Service(studentXMLRepository, studentValidator, temaXMLRepository, temaValidator, notaXMLRepository, notaValidator);
 
-        for (Student e : studentXMLRepository.findAll()) {
-            studentXMLRepository.delete(e.getID());
-        }
+        studentXMLRepository.delete("999");
     }
 
 
