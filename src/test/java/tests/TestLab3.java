@@ -30,30 +30,113 @@ public class TestLab3 {
         NotaValidator notaValidator = new NotaValidator(studentXMLRepository, temaXMLRepository);
         NotaXMLRepo notaXMLRepository = new NotaXMLRepo(filenameNota);
         service = new Service(studentXMLRepository, studentValidator, temaXMLRepository, temaValidator, notaXMLRepository, notaValidator);
+        temaXMLRepository.delete("1");
     }
 
 
     @Test
-    public void addValidAssignmentTest(){
-        String nrTema = "10";
-        String descriere = "LabAssignment";
-        int deadline = 10;
-        int primire = 6;
-        Tema tema = new  Tema(nrTema, descriere, deadline, primire);
+    public void addValidAssignment(){
+        String nrTema = "1";
+        String descriere = "desc";
+        int deadline = 2;
+        int primire = 1;
+        Tema tema = new Tema(nrTema, descriere, deadline, primire);
 
-        service.addTema(tema);
-
+        Tema result = service.addTema(tema);
+        assert(result == null);
         assert (temaXMLRepository.findOne(nrTema).getDescriere().equals(descriere));
     }
 
     @Test(expected = ValidationException.class)
-    public void addInvalidAssignmentTest(){
-        String nrTema = "10";
-        String descriere = "LabAssignment";
-        int deadline = 20;
-        int primire = 6;
+    public void addNullIdAssignment(){
+        String nrTema = null;
+        String descriere = "desc";
+        int deadline = 2;
+        int primire = 1;
+        Tema tema = new Tema(nrTema, descriere, deadline, primire);
+
+        service.addTema(tema);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addEmptyIdAssignment(){
+        String nrTema = "";
+        String descriere = "desc";
+        int deadline = 2;
+        int primire = 1;
         Tema tema = new  Tema(nrTema, descriere, deadline, primire);
 
         service.addTema(tema);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addEmptyDescriptionAssignment(){
+        String nrTema = "1";
+        String descriere = "";
+        int deadline = 2;
+        int primire = 1;
+        Tema tema = new  Tema(nrTema, descriere, deadline, primire);
+
+        service.addTema(tema);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addNegativeDeadlineAssignment(){
+        String nrTema = "1";
+        String descriere = "desc";
+        int deadline = -1;
+        int primire = 2;
+        Tema tema = new  Tema(nrTema, descriere, deadline, primire);
+
+        service.addTema(tema);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addGreaterDeadlineAssignment(){
+        String nrTema = "1";
+        String descriere = "desc";
+        int deadline = 15;
+        int primire = 1;
+        Tema tema = new  Tema(nrTema, descriere, deadline, primire);
+
+        service.addTema(tema);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addNegativeStartWeekAssignment(){
+        String nrTema = "1";
+        String descriere = "desc";
+        int deadline = 2;
+        int primire = -1;
+        Tema tema = new  Tema(nrTema, descriere, deadline, primire);
+
+        service.addTema(tema);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void addGreaterStartWeekAssignment(){
+        String nrTema = "1";
+        String descriere = "desc";
+        int deadline = 2;
+        int primire = 15;
+        Tema tema = new  Tema(nrTema, descriere, deadline, primire);
+
+        service.addTema(tema);
+    }
+
+    @Test
+    public void addDuplicateAssignment(){
+        String nrTema = "1";
+        String descriere1 = "desc";
+        String descriere2 = "desc2";
+        int deadline = 2;
+        int primire = 1;
+        Tema tema1 = new  Tema(nrTema, descriere1, deadline, primire);
+        Tema tema2 = new  Tema(nrTema, descriere2, deadline, primire);
+
+        service.addTema(tema1);
+        Tema result = service.addTema(tema2);
+
+        assert (result.getID() == nrTema && descriere2.equals(result.getDescriere()));
     }
 }
