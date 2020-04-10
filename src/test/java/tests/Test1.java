@@ -38,7 +38,6 @@ public class Test1 {
         studentXMLRepository.delete("999");
     }
 
-
     @Test
     public void addStudentTest(){
         String id = "999";
